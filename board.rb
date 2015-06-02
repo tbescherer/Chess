@@ -78,9 +78,8 @@ class Board
   end
 
   def self.coord(string)
-    row, col = string.split("")
-
-    [row.upcase.ord % "A".ord,col.to_i - 1]
+    col, row  = string.split("")
+    [DIMENSIONS - row.to_i, col.upcase.ord % "A".ord]
   end
 end
 

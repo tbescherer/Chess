@@ -10,10 +10,6 @@ class King < SteppingPiece
     [-1, 1]
   ]
 
-  def moves
-
-  end
-
 
 
 end

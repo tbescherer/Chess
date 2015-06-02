@@ -1,5 +1,5 @@
 class Piece
-  attr_reader :board, :color
+  attr_reader :board, :pos, :color
 
   def initialize(board, pos, color)
     @board = board
@@ -7,14 +7,13 @@ class Piece
     @color = color
   end
 
-  def self.valid?(pos) #class method for testing purposes
+  def valid?(pos) #class method for testing purposes
     x,y = pos
     return false unless pos.all?{|n| n.between?(0,Board::DIMENSIONS - 1)}
     unless board[x,y].nil?
       return false if board[x,y].color == color
     end
     #won't put in check
-    
     true
   end
 
