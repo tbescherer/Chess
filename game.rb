@@ -4,6 +4,7 @@ class Game
     @board = Board.new
     @white = HumanPlayer.new(:white, @board)
     @black = HumanPlayer.new(:black, @board)
+    play
   end
 
   def play

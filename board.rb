@@ -78,6 +78,7 @@ class Board
   end
 
   def self.coord(string)
+    raise BadMoveError.new("Invalid.") unless string.length == 2
     col, row  = string.split("")
     [DIMENSIONS - row.to_i, col.upcase.ord % "A".ord]
   end

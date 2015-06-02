@@ -10,7 +10,7 @@ class Piece
   def valid?(pos) #class method for testing purposes
     x,y = pos
     return false unless pos.all?{|n| n.between?(0,Board::DIMENSIONS - 1)}
-    unless board[x,y].nil?
+    if !board[x,y].nil?
       return false if board[x,y].color == color
     end
     #won't put in check
