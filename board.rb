@@ -1,9 +1,10 @@
 class Board
   DIMENSIONS = 8
   PIECES = {
-    
+
   }
   BACK_ROW = [Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook]
+  FRONT_ROW =  [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn]
   attr_accessor :grid
 
   def initialize
@@ -21,14 +22,16 @@ class Board
 
   def set_board
     #set black PIECES
-    set_row = Proc.new do |row, color|
+    set_row = Proc.new do |row, color, constant|
       0.upto(DIMENSIONS - 1) do |idx|
-        @grid[row][idx] = BACK_ROW[idx].new(self, [row,idx], color)
+        @grid[row][idx] = constant[idx].new(self, [row,idx], color)
       end
     end
 
-    set_row.call(0,:black)
-    set_row.call(7,:white)
+    set_row.call(0,:black, BACK_ROW)
+    set_row.call(7,:white, BACK_ROW)
+    set_row.call(1,:black, FRONT_ROW)
+    set_row.call(6,:white, FRONT_ROW)
 
 
     # @grid[0].each_index do |idx|
@@ -41,6 +44,7 @@ class Board
   def display_board
     @grid.each do |row|
       row
+    end
 
   end
 
