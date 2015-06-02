@@ -1,7 +1,21 @@
 class Board
   DIMENSIONS = 8
-  PIECES = {
+  WHITE_PIECES = {
+    Pawn => "\u2659",
+    Knight => "\u2658",
+    Bishop => "\u2657",
+    Rook => "\u2656",
+    Queen => "\u2655",
+    King => "\u2654"
+  }
 
+  BLACK_PIECES = {
+    Pawn => "\u265F",
+    Knight => "\u265E",
+    Bishop => "\u265D",
+    Rook => "\u265C",
+    Queen => "\u265B",
+    King => "\u265A"
   }
   BACK_ROW = [Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook]
   FRONT_ROW =  [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn]
@@ -41,11 +55,26 @@ class Board
     # @grid[0,0] =
   end
 
+  def inspect
+    nil
+  end
+
   def display_board
     @grid.each do |row|
-      row
+      row_str = ""
+      row.each do |place|
+        if place.nil?
+          row_str += "\u25A1"
+        elsif place.color == :black
+          row_str += BLACK_PIECES[place.class]
+        else
+          row_str += WHITE_PIECES[place.class]
+        end
+      end
+      puts row_str
     end
 
+    return nil
   end
 
   def self.coord(string)
