@@ -1,0 +1,4 @@
+class Bishop < SlidingPiece
+
+
+end
