@@ -35,7 +35,6 @@ class Board
   end
 
   def set_board
-    #set black PIECES
     set_row = Proc.new do |row, color, constant|
       0.upto(DIMENSIONS - 1) do |idx|
         @grid[row][idx] = constant[idx].new(self, [row,idx], color)
@@ -46,13 +45,6 @@ class Board
     set_row.call(7,:white, BACK_ROW)
     set_row.call(1,:black, FRONT_ROW)
     set_row.call(6,:white, FRONT_ROW)
-
-
-    # @grid[0].each_index do |idx|
-    #   @grid[0][idx] = BACKROW[idx].new(self, [0,idx], :black)
-
-    #set white pieces
-    # @grid[0,0] =
   end
 
   def inspect
@@ -104,6 +96,25 @@ class Board
     else
       raise BadMoveError.new("Not a valid move.")
     end
+  end
+
+  def check(color)
+    my_pieces = []
+
+    @grid.each do |row|
+      row.each do |piece|
+        next if piece.nil?
+        my_pieces << piece if piece.color == color
+      end
+    end
+
+    my_pieces.each do |piece|
+      piece.moves.each do |move|
+        return true if self[*move].class == King
+      end
+    end
+
+    false
   end
 end
 

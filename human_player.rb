@@ -3,11 +3,11 @@ class HumanPlayer
 
   def initialize(color, board)
     @color = color
-    @name = name
+    @name = name_prompt
     @board = board
   end
 
-  def name
+  def name_prompt
     puts "What is your name, #{@color.to_s}?"
     gets.chomp
   end
