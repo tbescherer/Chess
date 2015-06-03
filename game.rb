@@ -1,7 +1,8 @@
+require 'yaml'
 class Game
 
-  def initialize
-    @board = Board.new
+  def initialize(board = nil)
+    @board = board.nil? ? Board.new : Board.new(board)
     @white = HumanPlayer.new(:white, @board)
     @black = HumanPlayer.new(:black, @board)
     play
@@ -16,5 +17,15 @@ class Game
     end
   end
 
+  def save
+    File.new("save.txt", "w+")
+    File.open("save.txt", "w+") do |f|
+      f.puts @board.to_yaml
+    end
+  end
 
+  def self.load(filename)
+    file = File.read(filename)
+    Game.new(YAML::load(file))
+  end
 end

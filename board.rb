@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Board
   DIMENSIONS = 8
   WHITE_PIECES = {
@@ -74,14 +76,14 @@ class Board
   end
 
   def self.coord(string)
-    raise BadMoveError.new("Invalid.") unless string.length == 2
+    raise BadMoveError.new("Invalid. Try again.") unless string.length == 2
     col, row  = string.split("")
     [DIMENSIONS - row.to_i, col.upcase.ord % "A".ord]
   end
 
   def move(start_pos, end_pos, color)
     if start_pos.nil? || end_pos.nil?
-      raise BadMoveError.new("Not a valid command.")
+      raise BadMoveError.new("Not a valid command. Try again.")
     end
 
     start_x, start_y = Board.coord(start_pos)
@@ -90,12 +92,15 @@ class Board
     origin, move_to = self[start_x, start_y], [end_x, end_y]
 
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
-      results_in_check?([start_x, start_y], move_to)
-      self[end_x, end_y] = self[start_x, start_y]
-      self[start_x, start_y] = nil
-      self[end_x,end_y].pos = move_to
+      if !results_in_check?([start_x, start_y], move_to)
+        self[end_x, end_y] = self[start_x, start_y]
+        self[start_x, start_y] = nil
+        self[end_x,end_y].pos = move_to
+      else
+        raise BadMoveError.new("Move puts you in check! Try again.")
+      end
     else
-      raise BadMoveError.new("Not a valid move.")
+      raise BadMoveError.new("Not a valid move. Try again.")
     end
   end
 
@@ -115,13 +120,23 @@ class Board
     end
   end
 
-  def results_in_check?(origin, move_to)
-    future_grid = []
-    @grid.each do |row|
-      future_grid << row.dup
+  def dup_board
+    future_board = Board.new
+    @grid.each_with_index do |row, idx|
+      row.each_with_index do |tile, jdx|
+        if tile.nil?
+          future_board[idx,jdx] = nil
+        else
+          future_board[idx, jdx] = tile.class.new(future_board, tile.pos, tile.color)
+        end
+      end
     end
 
-    future_board = Board.new(future_grid)
+    future_board
+  end
+
+  def results_in_check?(origin, move_to)
+    future_board = dup_board
 
     future_board[*move_to] = future_board[*origin]
     future_board[*origin] = nil

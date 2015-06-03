@@ -18,7 +18,7 @@ class HumanPlayer
     begin
 
     start_pos, end_pos = gets.chomp.split('-')
-    @board.move(start_pos.strip, end_pos.strip, @color)
+    @board.move(start_pos, end_pos, @color)
 
     rescue BadMoveError => e
     puts e.message

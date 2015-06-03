@@ -12,3 +12,7 @@ require_relative './rook.rb'
 require_relative './board.rb'
 require_relative './human_player.rb'
 require_relative './game.rb'
+
+if __FILE__ == $PROGRAM_NAME
+  Game.new
+end
