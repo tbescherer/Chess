@@ -10,9 +10,11 @@ class Game
   def play
     loop do
       @white.move
-      puts "#{@black.name}, you're in Check!" if @board.check(:white)
+      puts "#{@black.name}, you're in Check!" if @board.check?(:white)
       @black.move
-      puts "#{@white.name}, you're in Check!" if @board.check(:black)
+      puts "#{@white.name}, you're in Check!" if @board.check?(:black)
     end
   end
+
+
 end

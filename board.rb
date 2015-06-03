@@ -21,9 +21,9 @@ class Board
   FRONT_ROW =  [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn]
   attr_accessor :grid
 
-  def initialize
+  def initialize(board=nil)
     @grid = Array.new(DIMENSIONS){ Array.new(DIMENSIONS) }
-    set_board
+    board.nil? ? set_board : @grid = board
   end
 
   def [](row,col)
@@ -36,8 +36,8 @@ class Board
 
   def set_board
     set_row = Proc.new do |row, color, constant|
-      0.upto(DIMENSIONS - 1) do |idx|
-        @grid[row][idx] = constant[idx].new(self, [row,idx], color)
+      constant.each_with_index do |piece, idx|
+        self[row, idx] = piece.new(self, [row,idx], color)
       end
     end
 
@@ -90,6 +90,7 @@ class Board
     origin, move_to = self[start_x, start_y], [end_x, end_y]
 
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
+      results_in_check?([start_x, start_y], move_to)
       self[end_x, end_y] = self[start_x, start_y]
       self[start_x, start_y] = nil
       self[end_x,end_y].pos = move_to
@@ -98,7 +99,7 @@ class Board
     end
   end
 
-  def check(color)
+  def check?(color)
     self.pieces(color).each do |piece|
       piece.moves.each do |move|
         return true if self[*move].class == King
@@ -112,6 +113,22 @@ class Board
     @grid.flatten.compact.select do |piece|
       piece.color == color
     end
+  end
+
+  def results_in_check?(origin, move_to)
+    future_grid = []
+    @grid.each do |row|
+      future_grid << row.dup
+    end
+
+    future_board = Board.new(future_grid)
+
+    future_board[*move_to] = future_board[*origin]
+    future_board[*origin] = nil
+    future_board[*move_to].pos = move_to
+
+    opp_color = future_board[*move_to].color == :white ? :black : :white
+    future_board.check?(opp_color)
   end
 
   def checkmate
