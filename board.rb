@@ -146,10 +146,25 @@ class Board
     future_board.check?(opp_color)
   end
 
-  def checkmate
-    #Todo
+  def checkmate?
 
+    if check?(:white)
+      pieces(:black).each do |piece|
+        piece.moves.each do |move|
+          return false unless results_in_check?(piece.pos, move)
+        end
+      end
+      return true
+    end
 
+    if check?(:black)
+      pieces(:white).each do |piece|
+        piece.moves.each do |move|
+          return false unless results_in_check?(piece.pos, move)
+        end
+      end
+      return true
+    end
 
   end
 end

@@ -12,9 +12,13 @@ class Game
     loop do
       @white.move
       puts "#{@black.name}, you're in Check!" if @board.check?(:white)
+      break if @board.checkmate?
       @black.move
       puts "#{@white.name}, you're in Check!" if @board.check?(:black)
+      break if @board.checkmate?
     end
+    @board.display
+    puts "Checkmate #{@board.checkmate?.to_s}!"
   end
 
   def save
