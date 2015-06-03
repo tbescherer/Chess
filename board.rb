@@ -84,7 +84,9 @@ class Board
   end
 
   def move(start_pos, end_pos, color)
-    raise BadMoveError.new("Not a valid command.") if start_pos.nil? || end_pos.nil?
+    if start_pos.nil? || end_pos.nil?
+      raise BadMoveError.new("Not a valid command.")
+    end
 
     start_x, start_y = Board.coord(start_pos)
     puts start_x
