@@ -98,6 +98,7 @@ class Board
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
       self[end_x, end_y] = self[start_x, start_y]
       self[start_x, start_y] = nil
+      self[end_x,end_y].pos = move_to
     else
       raise BadMoveError.new("Not a valid move.")
     end
