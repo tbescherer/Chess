@@ -82,6 +82,26 @@ class Board
     col, row  = string.split("")
     [DIMENSIONS - row.to_i, col.upcase.ord % "A".ord]
   end
+
+  def move(start_pos, end_pos, color)
+    raise BadMoveError.new("Not a valid command.") if start_pos.nil? || end_pos.nil?
+
+    start_x, start_y = Board.coord(start_pos)
+    puts start_x
+    puts start_y
+    end_x, end_y = Board.coord(end_pos)
+    origin, move_to = self[start_x, start_y], [end_x, end_y]
+
+    p origin #testing purposes only
+    p move_to #testing
+
+    if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
+      self[end_x, end_y] = self[start_x, start_y]
+      self[start_x, start_y] = nil
+    else
+      raise BadMoveError.new("Not a valid move.")
+    end
+  end
 end
 
 # p Board.new.grid

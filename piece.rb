@@ -24,4 +24,7 @@ class Piece
     end.select { |pos| valid?(pos) }
   end
 
+  def valid_for_piece?(pos)
+    self.moves.include?(pos)
+  end
 end
