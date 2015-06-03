@@ -52,8 +52,8 @@ class Board
   end
 
   def display_board
-    @grid.each do |row|
-      row_str = ""
+    @grid.each_with_index do |row, idx|
+      row_str = "#{DIMENSIONS - idx} "
       row.each do |place|
         if place.nil?
           row_str += "\u25A1"
@@ -62,9 +62,13 @@ class Board
         else
           row_str += WHITE_PIECES[place.class]
         end
+        row_str += " "
       end
       puts row_str
     end
+    print "  "
+    "A".upto("H") { |col| print col + " " }
+    puts ""
 
     return nil
   end
@@ -81,13 +85,9 @@ class Board
     end
 
     start_x, start_y = Board.coord(start_pos)
-    puts start_x
-    puts start_y
     end_x, end_y = Board.coord(end_pos)
-    origin, move_to = self[start_x, start_y], [end_x, end_y]
 
-    p origin #testing purposes only
-    p move_to #testing
+    origin, move_to = self[start_x, start_y], [end_x, end_y]
 
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
       self[end_x, end_y] = self[start_x, start_y]
@@ -99,16 +99,7 @@ class Board
   end
 
   def check(color)
-    my_pieces = []
-
-    @grid.each do |row|
-      row.each do |piece|
-        next if piece.nil?
-        my_pieces << piece if piece.color == color
-      end
-    end
-
-    my_pieces.each do |piece|
+    self.pieces(color).each do |piece|
       piece.moves.each do |move|
         return true if self[*move].class == King
       end
@@ -116,6 +107,17 @@ class Board
 
     false
   end
-end
 
-# p Board.new.grid
+  def pieces(color)
+    @grid.flatten.compact.select do |piece|
+      piece.color == color
+    end
+  end
+
+  def checkmate
+    #Todo
+
+
+
+  end
+end
