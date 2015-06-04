@@ -55,12 +55,12 @@ class Board
 
   def display_board
     @grid.each_with_index do |row, idx|
-      row_str = "#{DIMENSIONS - idx} "
+      row_str = "#{DIMENSIONS - idx} ".colorize(:color => :green)
       row.each do |place|
         if place.nil?
           row_str += "\u25A1"
         elsif place.color == :black
-          row_str += BLACK_PIECES[place.class]
+          row_str += BLACK_PIECES[place.class].colorize(:color => :blue)
         else
           row_str += WHITE_PIECES[place.class]
         end
@@ -69,7 +69,7 @@ class Board
       puts row_str
     end
     print "  "
-    "A".upto("H") { |col| print col + " " }
+    "A".upto("H") { |col| print col.colorize(:color => :green) + " " }
     puts ""
 
     return nil
@@ -83,15 +83,16 @@ class Board
 
   def move(start_pos, end_pos, color)
     if start_pos.nil? || end_pos.nil?
-      raise BadMoveError.new("Not a valid command. Try again.")
+      Game.save if start_pos == "save"
+      raise BadMoveError.new("Can't read input as a move. Try again.")
     end
 
     start_x, start_y = Board.coord(start_pos)
     end_x, end_y = Board.coord(end_pos)
-
     origin, move_to = self[start_x, start_y], [end_x, end_y]
 
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
+
       if !results_in_check?([start_x, start_y], move_to)
         self[end_x, end_y] = self[start_x, start_y]
         self[start_x, start_y] = nil
@@ -100,7 +101,8 @@ class Board
         raise BadMoveError.new("Move puts you in check! Try again.")
       end
     else
-      raise BadMoveError.new("Not a valid move. Try again.")
+
+      raise BadMoveError.new("Not a valid move! Try again.")
     end
   end
 

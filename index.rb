@@ -1,5 +1,5 @@
+require 'colorize'
 require_relative './errors.rb'
-require_relative './00_tree_node.rb'
 require_relative './piece.rb'
 require_relative './sliding_piece.rb'
 require_relative './stepping_piece.rb'

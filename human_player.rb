@@ -15,13 +15,13 @@ class HumanPlayer
   def move
     @board.display_board
     print "#{@color.to_s}: Enter start and end position, divided by a dash: "
-    begin
 
-    start_pos, end_pos = gets.chomp.split('-')
-    @board.move(start_pos, end_pos, @color)
+    begin
+      start_pos, end_pos = gets.chomp.split('-')
+      @board.move(start_pos, end_pos, @color)
 
     rescue BadMoveError => e
-    puts e.message
+      puts e.message
     retry
     end
   end
