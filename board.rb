@@ -54,18 +54,25 @@ class Board
   end
 
   def display_board
+    bg_color = :black
     @grid.each_with_index do |row, idx|
       row_str = "#{DIMENSIONS - idx} ".colorize(:color => :green)
+
+      bg_color = bg_color == :white ? :black : :white
       row.each do |place|
+
         if place.nil?
-          row_str += "\u25A1"
+          new_square = " ".colorize(:color => :white)
         elsif place.color == :black
-          row_str += BLACK_PIECES[place.class].colorize(:color => :blue)
+          new_square = BLACK_PIECES[place.class].colorize(:color => :blue)
         else
-          row_str += WHITE_PIECES[place.class]
+          new_square = WHITE_PIECES[place.class].colorize(:color => :red)
         end
-        row_str += " "
+
+        row_str += "#{new_square} ".colorize(background: bg_color)
+        bg_color = bg_color == :white ? :black : :white
       end
+
       puts row_str
     end
     print "  "
