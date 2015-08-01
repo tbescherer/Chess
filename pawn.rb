@@ -1,4 +1,11 @@
 class Pawn < Piece
+  attr_accessor :left_passant, :right_passant
+
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @left_passant = false
+    @right_passant = false
+  end
 
   def moves
     moves = []
@@ -26,7 +33,11 @@ class Pawn < Piece
   def diagonal_moves(x,y)
     moves = []
     move = [self.pos[0] + x, self.pos[1] + y]
-    moves << move if !@board[*move].nil? && @board[*move].color != self.color
+
+      moves << move if !@board[*move].nil? && @board[*move].color != self.color
+      moves << move if @left_passant && y == -1
+      moves << move if @right_passant && y == 1
+
     moves
   end
 end

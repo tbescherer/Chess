@@ -104,7 +104,6 @@ class Board
     start_x, start_y = Board.coord(start_pos)
     end_x, end_y = Board.coord(end_pos)
     origin, move_to = self[start_x, start_y], [end_x, end_y]
-
     # Checks if move is valid
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
 
@@ -126,10 +125,13 @@ class Board
         self[start_x, start_y] = nil
         self[end_x,end_y].pos = move_to
 
-        #Check for promotion for Pawn
+        #Move condition for pawn
         if self[end_x, end_y].class == Pawn
-          x_coord = color == :white ? 0 : 7
-          promote(self[end_x, end_y]) if end_x == x_coord
+          if (end_x - start_x).abs == 2
+            activate_passant(end_x, end_y, color)
+          end
+          end_row = color == :white ? 0 : 7
+          promote(self[end_x, end_y]) if end_x == end_row
         end
 
       else
@@ -138,6 +140,29 @@ class Board
     else
 
       raise BadMoveError.new("Not a valid move! Try again.")
+    end
+
+    turn_off_passant(color)
+  end
+
+  def turn_off_passant(color)
+    self.pieces(color).each do |piece|
+      if piece.class == Pawn
+        piece.left_passant = false
+        piece.right_passant = false
+      end
+    end
+  end
+
+  def activate_passant(end_x, end_y, color)
+    left = self[end_x, end_y - 1]
+    right = self[end_x, end_y + 1]
+    if left.class == Pawn && left.color != color
+      left.right_passant = true
+    end
+
+    if right.class == Pawn && left.color != color
+      right.left_passant = true
     end
   end
 
