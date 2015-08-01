@@ -114,11 +114,15 @@ class Board
         if self[start_x, start_y].class == King
           if (end_y - start_y).abs == 2
             castle_rook((end_y - start_y), color)
-            # assigns end_pos for ROOK
-            # call move(rook.pos, end_pos, rook.color)
           end
 
           self[start_x, start_y].has_moved = true
+        end
+
+        if self[start_x, start_y].class == Pawn
+          if end_y != start_y && self[end_x, end_y].nil?
+            self[start_x, end_y] = nil
+          end
         end
 
         self[end_x, end_y] = self[start_x, start_y]
