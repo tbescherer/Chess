@@ -90,7 +90,8 @@ class Board
 
   def move(start_pos, end_pos, color)
     if start_pos.nil? || end_pos.nil?
-      Game.save if start_pos == "save"
+      Game.save(self.grid) if start_pos == "save"
+      Game.load if start_pos == "load"
       raise BadMoveError.new("Can't read input as a move. Try again.")
     end
 
@@ -101,6 +102,7 @@ class Board
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
 
       if !results_in_check?([start_x, start_y], move_to)
+        self[start_x, start_y].has_moved = true if self[start_x, start_y].class == King
         self[end_x, end_y] = self[start_x, start_y]
         self[start_x, start_y] = nil
         self[end_x,end_y].pos = move_to

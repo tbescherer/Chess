@@ -22,17 +22,17 @@ class Game
     puts "Checkmate!".on_red
   end
 
-  def self.save
+  def self.save(grid)
     File.new("save.txt", "w+")
     File.open("save.txt", "w+") do |f|
-      f.puts @board.to_yaml
+      f.puts grid.to_yaml
     end
     puts "Game saved!"
   end
 
-  def self.load(filename)
-    file = File.read(filename)
-    Game.new(YAML::load(file))
+  def self.load
+    file = File.read("save.txt")
+    Game.new(YAML.load(file))
     puts "Game loaded!"
   end
 end
