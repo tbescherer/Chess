@@ -89,20 +89,39 @@ class Board
   end
 
   def move(start_pos, end_pos, color)
-    if start_pos.nil? || end_pos.nil?
-      Game.save(self.grid) if start_pos == "save"
-      Game.load if start_pos == "load"
-      raise BadMoveError.new("Can't read input as a move. Try again.")
+    # Allows user to load/save
+    if end_pos.nil?
+      if start_pos == "save" || start_pos == "load"
+        Game.save(self.grid) if start_pos == "save"
+        Game.load if start_pos == "load"
+        raise BadMoveError.new("Please enter a new move.")
+      else
+        raise BadMoveError.new("Can't read input as a move. Try again.")
+      end
     end
 
+    # Assigns var names to positions
     start_x, start_y = Board.coord(start_pos)
     end_x, end_y = Board.coord(end_pos)
     origin, move_to = self[start_x, start_y], [end_x, end_y]
 
+    # Checks if move is valid
     if !origin.nil? && origin.color == color && origin.valid_for_piece?(move_to)
 
+      # Move the pieces
       if !results_in_check?([start_x, start_y], move_to)
-        self[start_x, start_y].has_moved = true if self[start_x, start_y].class == King
+
+        # Particulr move condition for king
+        if self[start_x, start_y].class == King
+          if (end_y - start_y).abs == 2
+            castle_rook((end_y - start_y), color)
+            # assigns end_pos for ROOK
+            # call move(rook.pos, end_pos, rook.color)
+          end
+
+          self[start_x, start_y].has_moved = true
+        end
+
         self[end_x, end_y] = self[start_x, start_y]
         self[start_x, start_y] = nil
         self[end_x,end_y].pos = move_to
@@ -112,6 +131,27 @@ class Board
     else
 
       raise BadMoveError.new("Not a valid move! Try again.")
+    end
+  end
+
+  def castle_rook(diff, color)
+    x_coord = color == :white ? "1" : "8"
+
+    if diff == -2
+      y_coord = "a"
+      new_y = "d"
+    else
+      y_coord = "h"
+      new_y = "f"
+    end
+
+    origin_string = y_coord + x_coord
+    terminus_string = new_y + x_coord
+
+    if self[*Board.coord(origin_string)].class == Rook
+      move(origin_string, terminus_string, color)
+    else
+      raise BadMoveError.new("Your valid move is not in this castle.")
     end
   end
 

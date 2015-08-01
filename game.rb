@@ -27,12 +27,12 @@ class Game
     File.open("save.txt", "w+") do |f|
       f.puts grid.to_yaml
     end
-    puts "Game saved!"
+    puts "Board saved!"
   end
 
   def self.load
     file = File.read("save.txt")
     Game.new(YAML.load(file))
-    puts "Game loaded!"
+    puts "Board loaded!"
   end
 end
