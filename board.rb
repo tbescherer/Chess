@@ -12,12 +12,12 @@ class Board
   }
 
   BLACK_PIECES = {
-    Pawn => "\u265F",
-    Knight => "\u265E",
-    Bishop => "\u265D",
-    Rook => "\u265C",
-    Queen => "\u265B",
-    King => "\u265A"
+    Pawn => "\u2659",
+    Knight => "\u2658",
+    Bishop => "\u2657",
+    Rook => "\u2656",
+    Queen => "\u2655",
+    King => "\u2654"
   }
   BACK_ROW = [Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook]
   FRONT_ROW =  [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn]
@@ -56,27 +56,27 @@ class Board
   def display_board
     bg_color = :black
     @grid.each_with_index do |row, idx|
-      row_str = "#{DIMENSIONS - idx} ".colorize(:color => :green)
+      row_str = "#{DIMENSIONS - idx} ".colorize(color: :red)
 
-      bg_color = bg_color == :white ? :black : :white
+      bg_color = bg_color == :light_green ? :green : :light_green
       row.each do |place|
 
         if place.nil?
           new_square = " ".colorize(:color => :white)
         elsif place.color == :black
-          new_square = BLACK_PIECES[place.class].colorize(:color => :blue)
+          new_square = BLACK_PIECES[place.class].colorize(color: :black)
         else
-          new_square = WHITE_PIECES[place.class].colorize(:color => :red)
+          new_square = WHITE_PIECES[place.class].colorize(color: :white)
         end
 
         row_str += "#{new_square} ".colorize(background: bg_color)
-        bg_color = bg_color == :white ? :black : :white
+        bg_color = bg_color == :light_green ? :green : :light_green
       end
 
       puts row_str
     end
     print "  "
-    "A".upto("H") { |col| print col.colorize(:color => :green) + " " }
+    "A".upto("H") { |col| print col.colorize(color: :red) + " " }
     puts ""
 
     return nil
