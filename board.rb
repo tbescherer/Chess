@@ -110,7 +110,7 @@ class Board
       # Move the pieces
       if !results_in_check?([start_x, start_y], move_to)
 
-        # Particulr move condition for king
+        # Castling condition for king
         if self[start_x, start_y].class == King
           if (end_y - start_y).abs == 2
             castle_rook((end_y - start_y), color)
@@ -119,17 +119,19 @@ class Board
           self[start_x, start_y].has_moved = true
         end
 
+        # Passant condition for pawn
         if self[start_x, start_y].class == Pawn
           if end_y != start_y && self[end_x, end_y].nil?
             self[start_x, end_y] = nil
           end
         end
 
+        # Make the move
         self[end_x, end_y] = self[start_x, start_y]
         self[start_x, start_y] = nil
         self[end_x,end_y].pos = move_to
 
-        #Move condition for pawn
+        # Setting passant attributes for pawns
         if self[end_x, end_y].class == Pawn
           if (end_x - start_x).abs == 2
             activate_passant(end_x, end_y, color)
