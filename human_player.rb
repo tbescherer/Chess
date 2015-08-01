@@ -14,7 +14,7 @@ class HumanPlayer
 
   def move
     @board.display_board
-    print "#{@name.to_s}: Enter start and end position, divided by a dash: "
+    print "#{@name.to_s} (#{@color}): Enter start and end position, divided by a dash: "
 
     begin
       start_pos, end_pos = gets.chomp.split('-')

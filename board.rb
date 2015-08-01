@@ -92,7 +92,7 @@ class Board
     # Allows user to load/save
     if end_pos.nil?
       if start_pos == "save" || start_pos == "load"
-        Game.save(self.grid) if start_pos == "save"
+        Game.save(self.grid, color) if start_pos == "save"
         Game.load if start_pos == "load"
         raise BadMoveError.new("Please enter a new move.")
       else
@@ -125,12 +125,35 @@ class Board
         self[end_x, end_y] = self[start_x, start_y]
         self[start_x, start_y] = nil
         self[end_x,end_y].pos = move_to
+
+        #Check for promotion for Pawn
+        if self[end_x, end_y].class == Pawn
+          x_coord = color == :white ? 0 : 7
+          promote(self[end_x, end_y]) if end_x == x_coord
+        end
+
       else
         raise BadMoveError.new("Move puts you in check! Try again.")
       end
     else
 
       raise BadMoveError.new("Not a valid move! Try again.")
+    end
+  end
+
+  def promote(pawn)
+    valid_pieces = %w[Rook Knight Bishop Queen]
+
+    loop do
+      puts("What piece would you like to promote this pawn to?")
+      new_piece = gets.chomp.downcase.capitalize
+
+      if valid_pieces.include?(new_piece)
+        self[*pawn.pos] = Object.const_get(new_piece).new(pawn.board, pawn.pos, pawn.color)
+        break
+      else
+        puts("Not a valid piece.")
+      end
     end
   end
 
@@ -156,7 +179,7 @@ class Board
   end
 
   def check?(color)
-    self.pieces(color).each do |piece|
+    self.pieces(color.to_sym).each do |piece|
       piece.moves.each do |move|
         return true if self[*move].class == King
       end
