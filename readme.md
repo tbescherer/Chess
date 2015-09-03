@@ -25,3 +25,14 @@ To simplify movement among the pieces, we created a base Piece class from which 
 In order to evaluate whether a move is valid or not, the program simulates future board states based on the proposed move. If the move would put the moving player in check, or does not obey the rules of movement for the moving piece, we reject the move. To accomplish the future board simulation, we deep dup the board and raise an error to alert the user that the proposed move is not a valid one.
 
 To save board states, we used YAML. The program converts the Board's grid attribute object to YAML and saves it as a text file. When the user loads a game, the program reconstitutes this grid from YAML and passes it to the Game instance.
+
+## Requirements
+There are two outside gems required
+1. byebug
+1. colorize
+
+If you have _bundler_, you can install them with
+```
+bundle install
+```
+because they are specified in the Gemfile
